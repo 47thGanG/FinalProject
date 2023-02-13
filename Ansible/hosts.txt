@@ -1,0 +1,4 @@
+[master]
+ubusrv1 ansible_host=srbektimirov@158.160.53.166
+[slave]
+ubusrv2 ansible_host=srbektimirov@51.250.4.83
