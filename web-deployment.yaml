@@ -24,7 +24,7 @@ spec:
           name: web
         volumeMounts:
         - name: db-pass
-          mountPath: "/app/db-password"
+          mountPath: "/app"
           readOnly: true
       volumes:
       - name: db-pass
