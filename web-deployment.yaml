@@ -22,6 +22,15 @@ spec:
         ports:
         - containerPort: 5000
           name: web
+        volumeMounts:
+        - name: db-pass
+          mountPath: "/app/db-password"
+          readOnly: true
+      volumes:
+      - name: db-pass
+        secret:
+          secretName: db-password
+          optional: true
 ---
 apiVersion: v1
 kind: Service
