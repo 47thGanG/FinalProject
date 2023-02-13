@@ -15,6 +15,10 @@ spec:
       labels:
         app: web
     spec:
+      volumes:
+      - name: volpass
+        secret:
+          secretName: secret
       containers:
       - name: web
         image: hellopy
@@ -23,14 +27,11 @@ spec:
         - containerPort: 5000
           name: web
         volumeMounts:
-        - name: db-pass
-          mountPath: "/app"
-          readOnly: true
-      volumes:
-      - name: db-pass
-        secret:
-          secretName: db-password
-          optional: true
+        - name: volpass
+          mountPath: "/app/db-pas"
+        command: ["/bin/sh"]
+#        args: ["-c", "cp /app/db-pas/db-password /app/db-password"] #Контейнер Terminating > Completed > CrashLoopBackOff  
+        args: ["-c", "while true; do cp /app/db-pas/db-password /app/db-password; sleep 10;done"] 
 ---
 apiVersion: v1
 kind: Service
