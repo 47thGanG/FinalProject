@@ -29,9 +29,9 @@ spec:
         volumeMounts:
         - name: volpass
           mountPath: "/app/db-pas"
-        command: ["/bin/sh"]
+#        command: ["/bin/sh"]
 #        args: ["-c", "cp /app/db-pas/db-password /app/db-password"] #Контейнер Terminating > Completed > CrashLoopBackOff  
-        args: ["-c", "while true; do cp /app/db-pas/db-password /app/db-password; sleep 10;done"] 
+#        args: ["-c", "while true; do cp /app/db-pas/db-password /app/db-password; sleep 10;done"] #Не работает
 ---
 apiVersion: v1
 kind: Service
