@@ -1,5 +1,5 @@
 #!/bin/bash
-minikube start
+#minikube start
 eval $(minikube docker-env)
 docker build -t hellopy .
 kubectl apply -f secret.yaml
