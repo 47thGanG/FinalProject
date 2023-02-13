@@ -28,7 +28,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: db-password
-              key: password
+              key: db-password
         - name: MYSQL_DATABASE
           value: example
 ---
