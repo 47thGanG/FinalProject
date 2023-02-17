@@ -5,6 +5,8 @@ docker build -t hellopy .
 kubectl apply -f secret.yaml
 kubectl apply -f db-deployment.yaml
 kubectl apply -f web-deployment.yaml
+helm install trickster tricksterproxy/trickster --namespace default -f trickster.yaml
+kubectl apply -f grafana.yaml
 #MKIP=$(minikube ip)
 #CURL=$(curl $MKIP:30000)
 #echo -e "\ncurl $MKIP:30000\n $CURL"
