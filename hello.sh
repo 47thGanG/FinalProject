@@ -6,7 +6,7 @@ kubectl apply -f secret.yaml
 kubectl apply -f db-deployment.yaml
 kubectl apply -f web-deployment.yaml
 
-kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-np
+kubectl expose service my-prom-prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-np
 kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-np
 
 ###по яндексу
