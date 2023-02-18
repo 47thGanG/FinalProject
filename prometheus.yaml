@@ -10,7 +10,7 @@ alerting:
     timeout: 10s
     static_configs:
     - targets:
-      - {{ wget -qO- eth0.me }}:9093
+      - IP:9093
  
 # alert rule files
 rule_files:
@@ -18,7 +18,7 @@ rule_files:
  
 # remote write to victoriametrics
 #remote_write:
-#- url: http://{{ wget -qO- eth0.me }}:8428/api/v1/write
+#- url: http://IP:8428/api/v1/write
 #  remote_timeout: 30s
  
 # scrape exporter jobs
@@ -26,22 +26,22 @@ scrape_configs:
 - job_name: 'prometheus'
   static_configs:
     - targets:
-      - {{ wget -qO- eth0.me }}:9090
+      - IP:9090
 - job_name: 'node'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - {{ wget -qO- eth0.me }}:9100
+      - IP:9100
 - job_name: 'cadvisor'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - {{ wget -qO- eth0.me }}:8080
+      - IP:8080
 - job_name: 'blackbox'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - {{ wget -qO- eth0.me }}:9115
+      - IP:9115
 - job_name: 'blackbox-tcp'
   metrics_path: /probe
   params:
@@ -55,7 +55,7 @@ scrape_configs:
     - source_labels: [__param_target]
       target_label: instance
     - target_label: __address__
-      replacement: {{ wget -qO- eth0.me }}:9115
+      replacement: IP:9115
 - job_name: 'blackbox-http'
   metrics_path: /probe
   params:
@@ -69,4 +69,4 @@ scrape_configs:
     - source_labels: [__param_target]
       target_label: instance
     - target_label: __address__
-      replacement: {{ wget -qO- eth0.me }}:9115
+      replacement: IP:9115
