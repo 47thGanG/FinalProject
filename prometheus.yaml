@@ -1,3 +1,6 @@
+variables:
+  IP_SLAVE: 158.160.44.145
+
 global:
   scrape_interval: 15s
   scrape_timeout: 10s
@@ -10,38 +13,38 @@ alerting:
     timeout: 10s
     static_configs:
     - targets:
-      - <hostname>:9093
+      - $(IP_SLAVE):9093
  
 # alert rule files
 rule_files:
 - /etc/prometheus/rule_files/*.yml
  
 # remote write to victoriametrics
-remote_write:
-- url: http://<hostname>:8428/api/v1/write
-  remote_timeout: 30s
+#remote_write:
+#- url: http://$(IP_SLAVE):8428/api/v1/write
+#  remote_timeout: 30s
  
 # scrape exporter jobs
 scrape_configs:
 - job_name: 'prometheus'
   static_configs:
     - targets:
-      - <hostname>:9090
+      - $(IP_SLAVE):9090
 - job_name: 'node'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - <hostname>:9100
+      - $(IP_SLAVE):9100
 - job_name: 'cadvisor'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - <hostname>:8080
+      - $(IP_SLAVE):8080
 - job_name: 'blackbox'
   metrics_path: /metrics
   static_configs:
     - targets:
-      - <hostname>:9115
+      - $(IP_SLAVE):9115
 - job_name: 'blackbox-tcp'
   metrics_path: /probe
   params:
@@ -55,7 +58,7 @@ scrape_configs:
     - source_labels: [__param_target]
       target_label: instance
     - target_label: __address__
-      replacement: <hostname>:9115
+      replacement: $(IP_SLAVE):9115
 - job_name: 'blackbox-http'
   metrics_path: /probe
   params:
@@ -69,4 +72,4 @@ scrape_configs:
     - source_labels: [__param_target]
       target_label: instance
     - target_label: __address__
-      replacement: <hostname>:9115
+      replacement: $(IP_SLAVE):9115
