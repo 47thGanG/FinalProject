@@ -27,8 +27,8 @@ sudo useradd -M -u 1101 -s /bin/false prometheus
 sudo mkdir -p /etc/prometheus/rule_files # каталог конфигурации
 sudo mkdir -p /data/prometheus # каталог данных
 sudo chown -R prometheus /etc/prometheus /data/prometheus
-sudo sed "s/IP/${IP}/g" ./prometheus.yaml > 1
-sudo cp 1 /etc/prometheus/prometheus.yaml
+sudo sed "s/IP/${IP}/g" ./prometheus.yml > 1
+sudo cp 1 /etc/prometheus/prometheus.yml
 sudo mv /home/srbektimirov/mainp.yml /etc/prometheus/rule_files/main.yml
 sudo mv /home/srbektimirov/prometheus.service /etc/systemd/system/prometheus.service
 sudo systemctl daemon-reload
