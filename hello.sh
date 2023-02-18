@@ -2,12 +2,23 @@
 #minikube start
 eval $(minikube docker-env)
 docker build -t hellopy .
+
+mv /home/srbektimirov/node-exporter.service /etc/systemd/system/node-exporter.service
+mv /home/srbektimirov/cadvisor.service /etc/systemd/system/cadvisor.service
+mv /home/srbektimirov/blackbox-exporter.service /etc/systemd/system/blackbox-exporter.service
+
+sudo systemctl daemon-reload
+sudo systemctl start node-exporter cadvisor blackbox-exporter
+sudo systemctl status node-exporter cadvisor blackbox-exporter
+sudo systemctl enable node-exporter cadvisor blackbox-exporter
+
 kubectl apply -f secret.yaml
 kubectl apply -f db-deployment.yaml
 kubectl apply -f web-deployment.yaml
 
-kubectl expose service my-prom-prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-np
-kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-np
+###
+#kubectl expose service my-prom-prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-np
+#kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-np
 
 ###по яндексу
 #helm install trickster tricksterproxy/trickster --namespace default -f trickster.yaml
