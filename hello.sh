@@ -1,7 +1,6 @@
 #!/bin/bash
 #minikube start
 IP=$(wget -qO- eth0.me)
-echo "ip: ${IP}"
 #Build Docker
 eval $(minikube docker-env)
 docker build -t hellopy .
