@@ -3,9 +3,9 @@
 eval $(minikube docker-env)
 docker build -t hellopy .
 
-mv /home/srbektimirov/node-exporter.service /etc/systemd/system/node-exporter.service
-mv /home/srbektimirov/cadvisor.service /etc/systemd/system/cadvisor.service
-mv /home/srbektimirov/blackbox-exporter.service /etc/systemd/system/blackbox-exporter.service
+sudo mv /home/srbektimirov/node-exporter.service /etc/systemd/system/node-exporter.service
+sudo mv /home/srbektimirov/cadvisor.service /etc/systemd/system/cadvisor.service
+sudo mv /home/srbektimirov/blackbox-exporter.service /etc/systemd/system/blackbox-exporter.service
 
 sudo systemctl daemon-reload
 sudo systemctl start node-exporter cadvisor blackbox-exporter
