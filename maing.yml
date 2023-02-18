@@ -8,7 +8,7 @@ datasources:
     orgId: 1
     basicAuth: false
     editable: false
-    url: http://{{ wget -qO- eth0.me }}:9090
+    url: http://IP:9090
 #  - name: VictoriaMetrics
 #    type: prometheus
 #    version: 1
@@ -16,4 +16,4 @@ datasources:
 #    orgId: 1
 #    basicAuth: false
 #    editable: false
-#    url: http://{{ wget -qO- eth0.me }}:8428
+#    url: http://IP:8428
