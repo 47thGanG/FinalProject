@@ -28,7 +28,7 @@ sudo mkdir -p /etc/prometheus/rule_files # каталог конфигураци
 sudo mkdir -p /data/prometheus # каталог данных
 sudo chown -R prometheus /etc/prometheus /data/prometheus
 sudo mv /home/srbektimirov/prometheus.yaml /etc/prometheus/prometheus.yaml
-sed "s/IP/${IP}/g" ./prometheus.yaml > /etc/prometheus/prometheus.yaml
+sudo sed "s/IP/${IP}/g" ./prometheus.yaml > /etc/prometheus/prometheus.yaml
 sudo mv /home/srbektimirov/mainp.yml /etc/prometheus/rule_files/main.yml
 sudo mv /home/srbektimirov/prometheus.service /etc/systemd/system/prometheus.service
 sudo systemctl daemon-reload
@@ -42,7 +42,7 @@ sudo mkdir /etc/grafana/provisioning/dashboards # каталог деклара�
 sudo mkdir -p /data/grafana/dashboards # каталог данных
 sudo chown -R grafana /etc/grafana/ /data/grafana
 sudo mv /home/srbektimirov/maing.yml /etc/grafana/provisioning/datasources/main.yml
-sed "s/IP/${IP}/g" ./maing.yml > /etc/grafana/provisioning/datasources/main.yml
+sudo sed "s/IP/${IP}/g" ./maing.yml > /etc/grafana/provisioning/datasources/main.yml
 sudo mv /home/srbektimirov/maing2.yml /etc/grafana/provisioning/dashboards/main.yml
 cd ~/ && git clone https://github.com/rfmoz/grafana-dashboards
 sudo cp grafana-dashboards/prometheus/node-exporter-full.json /data/grafana/dashboards/
