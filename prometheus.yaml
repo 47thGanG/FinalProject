@@ -1,5 +1,5 @@
 variables:
-  IP_SLAVE: 158.160.44.145
+  IP_SLAVE: {{ wget -qO- eth0.me }}
 
 global:
   scrape_interval: 15s
