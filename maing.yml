@@ -1,0 +1,22 @@
+variables:
+  IP_SLAVE: {{ wget -qO- eth0.me }}
+
+apiVersion: 1
+ 
+datasources:
+  - name: Prometheus
+    type: prometheus
+    version: 1
+    access: proxy
+    orgId: 1
+    basicAuth: false
+    editable: false
+    url: http://$(IP_SLAVE):9090
+#  - name: VictoriaMetrics
+#    type: prometheus
+#    version: 1
+#    access: proxy
+#    orgId: 1
+#    basicAuth: false
+#    editable: false
+#    url: http://$(IP_SLAVE):8428
