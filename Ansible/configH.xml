@@ -35,8 +35,8 @@
   <builders>
     <hudson.tasks.Shell>
       <command>echo &apos;---------------Build Started---------------&apos;
-cd /home/srbektimirov/workspace/HelloPY+Minikube+Grafana/
-mv -f Dockerfile db-deployment.yaml hello.py hello.sh requirements.txt secret.yaml web-deployment.yaml node-exporter.service cadvisor.service blackbox-exporter.service alertmanager.yml alertmanager.service prometheus.yml mainp.yml prometheus.service maing.yml maing2.yml grafana.service /home/srbektimirov/
+cd /home/srbektimirov/workspace/$JOB_BASE_NAME/
+mv -f Dockerfile db-deployment.yaml hello.py hello.sh requirements.txt secret.yaml web-deployment.yaml node-exporter.service cadvisor.serv$
 cd /home/srbektimirov
 chmod +x hello.sh
 ./hello.sh
