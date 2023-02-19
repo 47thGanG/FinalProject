@@ -1,0 +1,64 @@
+---
+- name: Setup Master. Install and start Jenkins
+  hosts: master
+  become: yes
+
+  tasks:
+  - name: Download Jenkins repo
+    apt_key:
+      url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+      state: present
+
+  - name: ensure the repository is configured
+    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present 
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+      state: latest
+
+  - name: Install Java
+    apt: 
+      name: openjdk-11-jre
+      state: present
+
+  - name: Install Jenkins
+    apt:
+      name: jenkins
+      state: latest
+
+  - name: Start Jenkins
+    service:
+      name: jenkins
+      enabled: true
+      state: started
+
+  - name: Get ssh-key User Jenkins
+    shell: |
+      sudo -u jenkins bash -c "cd ~ && ssh-keygen -q -t rsa -b 4096 -N '' <<< $'\ny' >/dev/null 2>&1"
+    become: true
+      
+  - name: Copy Jenkins Pub-Key
+    shell: |
+      sudo cat /var/lib/jenkins/.ssh/id_rsa.pub > /home/srbektimirov/1
+      sudo cat /var/lib/jenkins/.ssh/id_rsa > /home/srbektimirov/2
+      sudo cat /var/lib/jenkins/secrets/initialAdminPassword > /home/srbektimirov/3
+
+  - name: MkDir Jobs
+    shell: |
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/"
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/Proxy"
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/builds/"
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/Proxy/builds/"
+    become: true
+
+  - name: Copy files to Jobs
+    shell: |
+      sudo mv /home/srbektimirov/configH.xml /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/config.xml
+      sudo mv /home/srbektimirov/configP.xml /var/lib/jenkins/jobs/Proxy/config.xml
+      sudo mv /home/srbektimirov/nextBuildNumberH /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/nextBuildNumber
+      sudo mv /home/srbektimirov/nextBuildNumberP /var/lib/jenkins/jobs/Proxy/nextBuildNumber
+      sudo mv /home/srbektimirov/legacyIdsH /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/builds/legacyIds
+      sudo mv /home/srbektimirov/legacyIdsP /var/lib/jenkins/jobs/Proxy/builds/legacyIds
+      sudo mv /home/srbektimirov/permalinksH /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/builds/permalinks
+      sudo mv /home/srbektimirov/permalinksP /var/lib/jenkins/jobs/Proxy/builds/permalinks

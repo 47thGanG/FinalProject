@@ -1,0 +1,99 @@
+---
+- name: Install and Start Minikube on Slave server
+  hosts: slave
+
+  tasks:
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+      state: latest
+    become: yes
+
+  - name: Install Docker.io
+    apt:
+      name: docker.io
+      state: latest
+    become: yes
+
+  - name: Install Kubectl
+    shell: |
+      sudo apt-get update && sudo apt-get install -y apt-transport-https
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+      sudo apt-get update
+      sudo apt-get install -y kubectl
+    become: yes
+
+  - name: Install Minikube
+    shell: |
+      curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      chmod +x minikube
+      sudo mkdir -p /usr/local/bin/
+      sudo install minikube /usr/local/bin/
+      usermod -aG docker srbektimirov
+    become: yes
+
+#  - name: Install Helm
+#    shell: |
+#      curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+#      sudo apt-get install apt-transport-https --yes
+#      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+#      sudo apt-get update
+#      sudo apt-get install helm
+#    become: yes
+
+#  - name: Command for Jenkins
+#    shell: |
+#      mkdir /home/srbektimirov/FinalProject
+#      sudo useradd -m -s /bin/bash jenkins
+#      mkdir /home/jenkins/.ssh
+#      touch /home/jenkins/.ssh/authorized_keys
+#      chown -R jenkins:jenkins /home/jenkins
+#      sudo usermod -aG sudo jenkins
+
+  - name: Reboot for start
+    shell: sleep 3 && reboot now
+    async: 1
+    poll: 0
+    become: yes
+
+  - name: Wait till my server will come up online
+    wait_for:
+      host: "{{ inventory_hostname }}"
+      state: started
+      delay: 5
+      timeout: 120
+    delegate_to: 127.0.0.1
+
+  - name: Install Java
+    apt:
+      name: openjdk-11-jre
+      state: present
+    become: yes
+
+  - name: Copy Jenkins Pub-Key
+    shell: cat 1 >> ~/.ssh/authorized_keys
+
+  - name: Start Minikube
+    shell: minikube start
+
+#  - name: Status Helm
+#    ansible.builtin.shell: helm status my-prom | grep STATUS | cut -c9-16
+#    register: StatMyProm
+#    ignore_errors: true
+
+#  - name: Install Prometheus
+#    shell: |
+#      helm repo add prometheus-community https://prometheus-community.github.io/helm-charts && helm repo update
+#      helm install my-prom prometheus-community/prometheus
+#    when: StatMyProm.stdout != 'deployed'
+
+#  - name: Install Grafana
+#    shell: |
+#      helm repo add grafana https://grafana.github.io/helm-charts
+#      helm install grafana grafana/grafana
+
+#  - name: Install trickster
+#    shell: |
+#      helm repo add tricksterproxy https://helm.tricksterproxy.io && helm repo update
+

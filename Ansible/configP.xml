@@ -1,0 +1,48 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>This Job up proxy and gives useful links to the console.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>slave</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <jenkins.triggers.ReverseBuildTrigger>
+      <spec></spec>
+      <upstreamProjects>Hello.Py + Minikube</upstreamProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </jenkins.triggers.ReverseBuildTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>IP=$(wget -qO- eth0.me)
+echo -e &quot;\ngo to webapp ==&gt; http://${IP}:8080/api/v1/namespaces/default/services/http:web:/proxy/&quot;
+echo -e &quot;\ngo to ==&gt; http://${IP}:9100/metrics (node)&quot;
+echo -e &quot;\ngo to ==&gt; http://${IP}:8080/metrics (cadvisor)&quot;
+echo -e &quot;\ngo to ==&gt; http://${IP}:9115/metrics (blackbox)&quot;
+
+echo -e &quot;\ngo to ==&gt; http://${IP}:9093 Alertmanager&quot;
+echo -e &quot;\ngo to ==&gt; http://${IP}:9093/#/alerts Alertmanager&quot;
+echo -e &quot;\ngo to ==&gt; http://${IP}:9093/#/status Alertmanager&quot;
+
+echo -e &quot;\ngo to ==&gt; http://${IP}:9090 Prometheus Status =&gt; Configuration/Rules/Targets&quot;
+
+echo -e &quot;\ngo to ==&gt; http://${IP}:3000 Grafana&quot;
+
+kubectl proxy --address=&apos;0.0.0.0&apos; --port=8080 --accept-hosts=&apos;.*&apos;</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
