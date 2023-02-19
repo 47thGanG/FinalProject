@@ -1,72 +1,28 @@
 ***# FinalProject***
-1. Создаём две ВМ
-2. Вставляем ip наших ВМ в hosts.txt в директории Ansible:
+0. Необходимо: ssh ключ на host-машине, установленный ansible, 2 ВМ и SSH доступ к ним.
+1. Создаём две ВМ: Первая будет выступать в роли мастера (20% 2 vCPU, 2 Gb RAM, 30 Gb), вторая - агента (50% 4 vCPU, 4 Gb RAM, 50 Gb). 
+2. Идём в директорию ansible, забираем все файлы себе. Идём в свою папку ansible и запускаем скрипт ansible.sh с двумя аргументами: 1 - IP Мастера, 2 - IP агента.
 ```
-nano /Users/MacbookSergeyB/ansible/hosts.txt
+cd ~/ansible
+./ansible.sh IP_MASTER IP_AGENT
 ```
-3. Запускаем 3 плэйбука:
-```
-ansible-playbook installJenkins.yaml
-ansible-playbook installMinikube.yaml
-ansible-playbook startMinikube.yaml
-```
-4. Идём в ВМ Master. Переходим в пользователя jenkins. В его домашней директории создаём ключ, публичную часть которого перенесём в authorized_keys на ВМ slave, а приватную часть - в jenkins Credentials для пользователя srbektimirov. 
-```
-ssh srbektimirov@158.160.53.166
-sudo su
-su - jenkins
-ssh-keygen
-cat /var/lib/jenkins/.ssh/id_rsa
-cat /var/lib/jenkins/.ssh/id_rsa.pub
-```
->Спасибо: https://www.youtube.com/watch?v=ee1XcQxKfRk
-5. Добавляем Agent в jenkins. Не забываем установить плагин 
-6. Создадим Freestyle Project, где указываем, что это
+3. Во время действия скрипта, при первых подключениях к ВМ потребуется дважды ввести yes (во время запуска playbook-ов с настройкой Мастера и Агента)
+4. Переходим в Jenkins по предоставленной скриптом ссылке. Не забываем установить плагин, после установки которого произойдёт перезагрузка Jenkins и отобразятся Job'ы. Добавляем Агента в jenkins.
+5. После того, как убедимся, что Agent добавлен, запускаем HelloPY+Minikube+Grafana. Данный Job заберёт все необходимые файлы из github, перенесёт их на сборщик с лэйблом slave, и запустит скрипт.
+6. По окончании HelloPY+Minikube+Grafana, автоматически запустится Proxy.
+7. Можем подключаться по адресам, указаным в консольном выводе Job'ы **Proxy**.
 
-6.1 GitHub project
-> Project url: https://github.com/47thGanG/FinalProject.git
+Используемые источники:
+>Jenkins, добавление Agent: https://www.youtube.com/watch?v=ee1XcQxKfRk;
 
-6.2 Ограничим лейблы сборщиков, которые могут исполнять данную задачу
-> slave
+>Adv-it, Jenkins, Ansible: https://www.youtube.com/@ADV-IT/playlists;
 
-6.3 Управление исходным кодом: Git
-> Repository URL: https://github.com/47thGanG/FinalProject.git/
+>Grafana, prometheus, node-exporter: https://habr.com/ru/post/709204/
 
-6.4 Branches to build:
-> */main
+==================Что улучшить?==================
 
-6.5 Добавим шаги сборки (Выполнить команду shell):
-```
-echo '---------------Build Started---------------'
-mv /home/srbektimirov/workspace/Hello.Py\ +\ Minikube/* /home/srbektimirov
-cd /home/srbektimirov
-chmod +x hello.sh
-./hello.sh
-echo '---------------Build Finished---------------'
-```
-```
-echo '---------------Test Started---------------'
-echo 'Your tests could be here'
-echo '---------------Test Finished---------------'
-```
-6.6 Добавим послесборочную операцию: Cобрать другой проект
-> ProxyRun; 
-> Только когда сборка стабильна
-
-7. Создадим второй Freestyle Project
-> ProxyRun
-
-7.1 Снова ограничим лейблы сборщиков, которые могут исполнять данную задачу
-> slave
-
-7.2 Добавим триггеры сборки
-> Запустить по окончанию сборки других проектов: Hello.Py + Minikube; 
-
-7.3 Добавим шаг сборки (Выполнить команду shell):
-```
-IP=$(wget -qO- eth0.me)
-echo -e "\ngo to ==> http://${IP}:8080/api/v1/namespaces/default/services/http:web:/proxy/\n\nor use this IP:"
-echo -e ""
-kubectl proxy --address='0.0.0.0' --port=8080 --accept-hosts='.*'
-```
-8. Можем подключаться по адресу, указаному в консольном выводе **ProxyRun**.
+1. Нет реализации масштабирования и распределённости;
+2. Не удалось полностью автоматизировать Jenkins (добавление Агентов, credentials);
+3. Нет проверок об уже выполненных вещах;
+4. PG не в minikube, dashboard никак не кастомизирован;
+5. Запуск при изменених только через кнопку (можно добавить триггер по коммиту в мастер-ветку гитхаба).
