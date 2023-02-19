@@ -31,7 +31,7 @@ else
         cat 1
 	scp ~/ansible/1 srbektimirov@$2:~/1
 	scp srbektimirov@$1:~/2 ~/ansible/1
-	echo '=#=#=#=#=Jenkins Privet Key=#=#=#=#='
+	echo '=#=#=#=#=Jenkins Privet Key (А это точно безопасно?)=#=#=#=#='
 	cat 1
 	scp srbektimirov@$1:~/3 ~/ansible/1
 	echo '=#=#=#=#=1st Password for Jenkins=#=#=#=#='
