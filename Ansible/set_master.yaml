@@ -10,7 +10,7 @@
       state: present
 
   - name: ensure the repository is configured
-    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present 
+    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
 
   - name: Update apt cache
     apt:
@@ -18,7 +18,7 @@
       state: latest
 
   - name: Install Java
-    apt: 
+    apt:
       name: openjdk-11-jre
       state: present
 
@@ -37,7 +37,7 @@
     shell: |
       sudo -u jenkins bash -c "cd ~ && ssh-keygen -q -t rsa -b 4096 -N '' <<< $'\ny' >/dev/null 2>&1"
     become: true
-      
+
   - name: Copy Jenkins Pub-Key
     shell: |
       sudo cat /var/lib/jenkins/.ssh/id_rsa.pub > /home/srbektimirov/1
@@ -47,9 +47,10 @@
   - name: MkDir Jobs
     shell: |
       sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/"
-      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/Proxy"
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/Proxy/"
       sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/builds/"
       sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/jobs/Proxy/builds/"
+      sudo -u jenkins bash -c "mkdir -p /var/lib/jenkins/nodes/Agent/"
     become: true
 
   - name: Copy files to Jobs
@@ -62,3 +63,4 @@
       sudo mv /home/srbektimirov/legacyIdsP /var/lib/jenkins/jobs/Proxy/builds/legacyIds
       sudo mv /home/srbektimirov/permalinksH /var/lib/jenkins/jobs/HelloPY+Minikube+Grafana/builds/permalinks
       sudo mv /home/srbektimirov/permalinksP /var/lib/jenkins/jobs/Proxy/builds/permalinks
+      sudo mv /home/srbektimirov/configJenkAgent.xml /var/lib/jenkins/nodes/Agent/config.xml
